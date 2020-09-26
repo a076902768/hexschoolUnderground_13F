@@ -38,3 +38,8 @@ rowMaxCount*13+1        rowMaxCount*14
 rowMaxCount*14+1        rowMaxCount*15
 
 rowMaxCount*15+1        rowMaxCount*16
+
+
+目前第幾行 = ID / (rowMaxCount+1) +1
+
+目前第幾欄 = ID % rowMaxCount  如果等於0 代表為最後一欄

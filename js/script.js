@@ -4,8 +4,15 @@ var app = new Vue({
     return {
       isStart: true,//預設false
       boxItem: [],
-      snakeHeader: 1,//目前蛇蛇小頭所在的BOX位置
+      snakeHeader: {
+        type: 'right',//方向
+        pos: 1//目前蛇蛇小頭所在的BOX位置
+      },//目前蛇蛇小頭所在的BOX位置
       timer: 300,
+      rowMaxCount: 28,//一行有28個BOX
+      colMaxCount: 16,//一欄有16個BOX
+      nowRow: 1,//目前在第幾行
+      nowCol: 1,//目前在第幾欄
       addType: {
         type: 'right',//方向
         push: 1//前進單位
@@ -33,20 +40,49 @@ var app = new Vue({
       const vm = this;
       setInterval(() => {
         vm.removeOldSnakeHeader();//移除舊的蛇蛇小頭
-        vm.snakeHeader += vm.addType.push;//改變蛇蛇小頭前進的方向
+        vm.determineOverflow();//判斷蛇蛇下一步是否會超出界
         vm.controlSnakeHeader();//渲染新的蛇蛇小頭
       }, vm.timer);//固定時間執行
     },
+    determineOverflow() {
+      const vm = this;
+      vm.snakeHeader.type = vm.addType.type;//改變蛇蛇小頭前進的方向
+      vm.nowRow = Math.floor(vm.snakeHeader.pos / (vm.rowMaxCount + 1)) + 1;
+      vm.nowCol = vm.snakeHeader.pos % vm.rowMaxCount;
+      let leftBox = vm.rowMaxCount * (vm.nowRow - 1) + 1;//左側邊緣的BOX
+      let rightBox = vm.rowMaxCount * vm.nowRow;//右側邊緣的BOX
+
+      //先判斷目前前進的方向
+      if (vm.snakeHeader.type == 'right' || vm.snakeHeader.type == 'left') {
+        // console.log('水平');
+        // console.log(vm.snakeHeader.type);
+        console.log(vm.snakeHeader.pos);
+        console.log(vm.nowRow, vm.nowCol);
+        console.log(leftBox, rightBox);
+        if (leftBox == vm.snakeHeader.pos) {
+          console.log('目前為第' + vm.nowRow + '行最左側:' + vm.snakeHeader.pos);
+        }
+        if (rightBox == vm.snakeHeader.pos) {
+          console.log('目前為第' + vm.nowRow + '行最右側:' + vm.snakeHeader.pos);
+        }
+      }//如果目前蛇蛇前進的方向為水平的
+      else {
+        console.log('垂直');
+        console.log(vm.snakeHeader.type);
+      }//如果目前蛇蛇前進的方向為垂直的
+
+      vm.snakeHeader.pos += vm.addType.push;//改變蛇蛇小頭所在的BOX位置
+    },
     removeOldSnakeHeader() {
       const vm = this;
-      let header = document.getElementById(`box_${vm.snakeHeader}`);
+      let header = document.getElementById(`box_${vm.snakeHeader.pos}`);
       header.classList.remove('snakeHeader');
     },
     controlSnakeHeader() {
       const vm = this;
       vm.boxItem.some(element => {
-        if (element.id == vm.snakeHeader) {
-          let header = document.getElementById(`box_${vm.snakeHeader}`);
+        if (element.id == vm.snakeHeader.pos) {
+          let header = document.getElementById(`box_${vm.snakeHeader.pos}`);
           header.classList.add('snakeHeader');
           return true;
         }
@@ -54,7 +90,7 @@ var app = new Vue({
     },
     createBox() {
       const vm = this;
-      let boxNumber = 28 * 16;//28*16
+      let boxNumber = vm.rowMaxCount * vm.colMaxCount;//28*16
       for (var i = 0; i < boxNumber; i++) {
         vm.boxItem.push({ id: i + 1 });
       }
