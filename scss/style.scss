@@ -1,0 +1,84 @@
+#app {
+  font-family: "Press Start 2P", cursive;
+  width: 1280px;
+  height: 800px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  .startScreen {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    .title {
+      display: flex;
+      box-sizing: border-box;
+      font-size: 38px;
+      color: #fff;
+      position: absolute;
+      top: 48%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      .square {
+        height: 37px;
+        width: 37px;
+        position: absolute;
+        top: -2px;
+        background-color: #fff;
+      }
+      .left {
+        left: -48px;
+      }
+      .right {
+        right: -49px;
+      }
+    }
+    .space {
+      cursor: pointer;
+      color: #00ffe2;
+      font-size: 24px;
+      position: absolute;
+      top: 57%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    img {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      z-index: -1;
+    }
+  }
+  .gameBox {
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    position: relative;
+    .gamescreen {
+      display: flex;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      width: 1120px;
+      height: 640px;
+      background-color: #bbd5ef;
+      border: solid 1px #002a9d;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      .box {
+        box-sizing: border-box;
+        border: solid 1px #002a9d;
+        background-color: #00035a;
+        width: 40px;
+        height: 40px;
+      }
+      .snakeHeader {
+        z-index: 1;
+        background-color: #00ffe2;
+        box-shadow: 0 0 30px 6px #fff;
+        border: none;
+      }
+    }
+  }
+}

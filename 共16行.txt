@@ -1,0 +1,40 @@
+共16行
+
+let rowMaxCount = 28 ;//一行有幾個BOX
+let nowRow = 目前在第幾行;
+左側邊緣的BOX 可表示為: rowMaxCount*(nowRow-1)+1
+
+右側邊緣的BOX 可表示為: rowMaxCount*nowRow
+
+
+rowMaxCount*0+1        rowMaxCount*1
+
+rowMaxCount*1+1        rowMaxCount*2
+
+rowMaxCount*2+1        rowMaxCount*3
+
+rowMaxCount*3+1        rowMaxCount*4
+
+rowMaxCount*4+1        rowMaxCount*5
+
+rowMaxCount*5+1        rowMaxCount*6
+
+rowMaxCount*6+1        rowMaxCount*7
+
+rowMaxCount*7+1        rowMaxCount*8
+
+rowMaxCount*8+1        rowMaxCount*9
+
+rowMaxCount*9+1        rowMaxCount*10
+
+rowMaxCount*10+1        rowMaxCount*11
+
+rowMaxCount*11+1        rowMaxCount*12
+
+rowMaxCount*12+1        rowMaxCount*13
+
+rowMaxCount*13+1        rowMaxCount*14
+
+rowMaxCount*14+1        rowMaxCount*15
+
+rowMaxCount*15+1        rowMaxCount*16

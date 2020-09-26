@@ -1,0 +1,110 @@
+#app {
+  font-family: "Press Start 2P", cursive;
+  width: 1280px;
+  height: 800px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+#app .startScreen {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#app .startScreen .title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-size: 38px;
+  color: #fff;
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+#app .startScreen .title .square {
+  height: 37px;
+  width: 37px;
+  position: absolute;
+  top: -2px;
+  background-color: #fff;
+}
+
+#app .startScreen .title .left {
+  left: -48px;
+}
+
+#app .startScreen .title .right {
+  right: -49px;
+}
+
+#app .startScreen .space {
+  cursor: pointer;
+  color: #00ffe2;
+  font-size: 24px;
+  position: absolute;
+  top: 57%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+#app .startScreen img {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: -1;
+}
+
+#app .gameBox {
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  position: relative;
+}
+
+#app .gameBox .gamescreen {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  width: 1120px;
+  height: 640px;
+  background-color: #bbd5ef;
+  border: solid 1px #002a9d;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+#app .gameBox .gamescreen .box {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border: solid 1px #002a9d;
+  background-color: #00035a;
+  width: 40px;
+  height: 40px;
+}
+
+#app .gameBox .gamescreen .snakeHeader {
+  z-index: 1;
+  background-color: #00ffe2;
+  -webkit-box-shadow: 0 0 30px 6px #fff;
+          box-shadow: 0 0 30px 6px #fff;
+  border: none;
+}
+/*# sourceMappingURL=style.css.map */

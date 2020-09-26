@@ -1,0 +1,16 @@
+共28欄
+
+let colMaxCount = 16 ;//一欄有幾個BOX
+let nowCol = 目前在第幾欄;
+
+上方邊緣的BOX可表示為 nowCol
+下方邊緣的BOX可表示為 colMaxCount*nowCol
+
+     nowCol                   nowCol             nowCol             nowCol             ............    nowCol
+
+
+
+
+
+
+colMaxCount*nowCol   colMaxCount*nowCol colMaxCount*nowCol  colMaxCount*nowCol     ............colMaxCount*nowCol
