@@ -8,6 +8,10 @@ var app = new Vue({
         type: 'right',//方向
         pos: 1//目前蛇蛇小頭所在的BOX位置
       },//目前蛇蛇小頭所在的BOX位置
+      oldSnakeHeader: {
+        type: 'right',
+        pos: 1
+      },
       timer: 300,
       rowMaxCount: 28,//一行有28個BOX
       colMaxCount: 16,//一欄有16個BOX
@@ -33,6 +37,10 @@ var app = new Vue({
         type: 'left',
         push: -1//往左一格
       },
+      leftBoxArray: [1, 29, 57, 85, 113, 141, 169, 197, 225, 253, 281, 309, 337, 365, 393, 421],
+      rightBoxArray: [28, 56, 84, 112, 140, 168, 196, 224, 252, 280, 308, 336, 364, 392, 420, 448],
+      topBoxArray: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
+      bottomBoxArray: [421, 422, 423, 424, 425, 426, 427, 428, 429, 430, 431, 432, 433, 434, 435, 436, 437, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448]
     }
   },
   methods: {
@@ -47,36 +55,43 @@ var app = new Vue({
     determineOverflow() {
       const vm = this;
       vm.snakeHeader.type = vm.addType.type;//改變蛇蛇小頭前進的方向
+      vm.snakeHeader.pos += vm.addType.push;//改變蛇蛇小頭所在的BOX位置
+
+      // let leftBox = vm.rowMaxCount * (vm.nowRow - 1) + 1;//左側邊緣的BOX
+      // let rightBox = vm.rowMaxCount * vm.nowRow;//右側邊緣的BOX
+      console.log(vm.snakeHeader.pos);
+      //先判斷目前前進的方向
+      let isLeft = vm.leftBoxArray.some((item) => { if (item == vm.oldSnakeHeader.pos) { return true; } });
+      let isRight = vm.rightBoxArray.some((item) => { if (item == vm.oldSnakeHeader.pos) { return true; } });
+      let isTop = vm.topBoxArray.some((item) => { if (item == vm.oldSnakeHeader.pos) { return true; } });
+      let isBottom = vm.bottomBoxArray.some((item) => { if (item == vm.oldSnakeHeader.pos) { return true; } });
+      if (isLeft && vm.snakeHeader.type == 'left') {
+        console.log('目前前進方向為左邊且上一個BOX為同行最左側');
+        vm.snakeHeader.pos += vm.addDown.push;//往下一格
+      }
+      if (isRight && vm.snakeHeader.type == 'right') {
+        console.log('目前前進方向為右邊且上一個BOX為同行最右側');
+        vm.snakeHeader.pos += vm.addUp.push;//往下一格
+      }
+      if (isTop && vm.snakeHeader.type == 'up') {
+        console.log('目前前進方向為往上且上一個BOX為同欄最頂端');
+        vm.snakeHeader.pos += 28 + 420;
+      }
+      if (isBottom && vm.snakeHeader.type == 'down') {
+        console.log('目前前進方向為往下且上一個BOX為同欄最底端');
+        vm.snakeHeader.pos += -28 - 420;
+      }
+
       vm.nowRow = Math.floor(vm.snakeHeader.pos / (vm.rowMaxCount + 1)) + 1;
       vm.nowCol = vm.snakeHeader.pos % vm.rowMaxCount;
-      let leftBox = vm.rowMaxCount * (vm.nowRow - 1) + 1;//左側邊緣的BOX
-      let rightBox = vm.rowMaxCount * vm.nowRow;//右側邊緣的BOX
 
-      //先判斷目前前進的方向
-      if (vm.snakeHeader.type == 'right' || vm.snakeHeader.type == 'left') {
-        // console.log('水平');
-        // console.log(vm.snakeHeader.type);
-        console.log(vm.snakeHeader.pos);
-        console.log(vm.nowRow, vm.nowCol);
-        console.log(leftBox, rightBox);
-        if (leftBox == vm.snakeHeader.pos) {
-          console.log('目前為第' + vm.nowRow + '行最左側:' + vm.snakeHeader.pos);
-        }
-        if (rightBox == vm.snakeHeader.pos) {
-          console.log('目前為第' + vm.nowRow + '行最右側:' + vm.snakeHeader.pos);
-        }
-      }//如果目前蛇蛇前進的方向為水平的
-      else {
-        console.log('垂直');
-        console.log(vm.snakeHeader.type);
-      }//如果目前蛇蛇前進的方向為垂直的
-
-      vm.snakeHeader.pos += vm.addType.push;//改變蛇蛇小頭所在的BOX位置
     },
     removeOldSnakeHeader() {
       const vm = this;
       let header = document.getElementById(`box_${vm.snakeHeader.pos}`);
       header.classList.remove('snakeHeader');
+      vm.oldSnakeHeader.type = vm.snakeHeader.type;//紀錄
+      vm.oldSnakeHeader.pos = vm.snakeHeader.pos;
     },
     controlSnakeHeader() {
       const vm = this;
@@ -122,6 +137,6 @@ var app = new Vue({
     await vm.createBox();//要等createBox執行完才能渲染小頭，否則會找不到DOM
     vm.controlSnakeHeader();//顯示蛇蛇小頭
     vm.watchKeyDown();//監視user操作方向鍵
-    // vm.snakeMoving();//控制蛇蛇前進
+    vm.snakeMoving();//控制蛇蛇前進
   },
 })
