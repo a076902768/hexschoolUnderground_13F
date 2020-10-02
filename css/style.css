@@ -65,8 +65,22 @@
 }
 
 #app .gameBox {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   background-color: #000000;
   position: relative;
 }
@@ -106,5 +120,16 @@
   -webkit-box-shadow: 0 0 30px 6px #fff;
           box-shadow: 0 0 30px 6px #fff;
   border: none;
+}
+
+#app .gameBox .gamescreen .snakeBody {
+  z-index: 1;
+  background-color: #fff;
+  border: solid 1px #002a9d;
+}
+
+#app .gameBox .gamescreen .pointBox {
+  background-image: url("../static/ic-point@2x.png");
+  background: transparent;
 }
 /*# sourceMappingURL=style.css.map */
