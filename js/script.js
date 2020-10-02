@@ -269,6 +269,6 @@ var app = new Vue({
     vm.drawSnake();//渲染蛇蛇
     vm.randomBait();//隨機產生餌
     vm.watchKeyDown();//監視user操作方向鍵
-    // vm.snakeMoving();//控制蛇蛇前進
+    vm.snakeMoving();//控制蛇蛇前進
   },
 })
