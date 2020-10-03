@@ -42,6 +42,10 @@ var app = new Vue({
         type: 'left',
         push: -1//往左一格
       },
+      baitBoxRight: [],
+      baitBoxLeft: [],
+      baitBoxUp: [],
+      baitBoxDown: [],
       leftBoxArray: [1, 29, 57, 85, 113, 141, 169, 197, 225, 253, 281, 309, 337, 365, 393, 421],
       rightBoxArray: [28, 56, 84, 112, 140, 168, 196, 224, 252, 280, 308, 336, 364, 392, 420, 448],
       topBoxArray: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
@@ -267,7 +271,82 @@ var app = new Vue({
       await getRandom(1, 448);
       console.log(vm.baitPos - 1);
       vm.boxItem[vm.baitPos - 1].isPoint = true;//1~448 -1 => 0~447
+      baitGradient(vm.baitPos);
+      function baitGradient(pos) {
+        vm.baitBoxRight = [];
+        vm.baitBoxLeft = [];
+        vm.baitBoxUp = [];
+        vm.baitBoxDown = [];
+        let rightPos = null;//以目前的餌為準，最右邊的BOX位置
+        let leftPos = null;
+        if (!(vm.rightBoxArray.some(item => { if (item == pos) { return true } }))) {
+          let temp = pos;
+          do {
+            temp++;
+            vm.baitBoxRight.push(temp);
+          } while (!(vm.rightBoxArray.some(item => { if (item == temp) { return true } })))
+        }//如果目前餌不是在最右邊
+        vm.baitBoxRight.forEach((item, index) => {
+          let baitbox = document.getElementById(`box_${item}`);
+          if (index < 6) {
+            baitbox.style.backgroundColor = `rgba(0,3,90,${0.5 + 0.1 * index})`;
+          } else {
+            baitbox.style.backgroundColor = `rgba(0,3,90,1)`;
+          }
+        })
+        console.log(vm.baitBoxRight);
 
+        if (!(vm.leftBoxArray.some(item => { if (item == pos) { return true } }))) {
+          let temp = pos;
+          do {
+            temp--;
+            vm.baitBoxLeft.push(temp);
+          } while (!(vm.leftBoxArray.some(item => { if (item == temp) { return true } })))
+        }//如果目前餌不是在最右邊
+        vm.baitBoxLeft.forEach((item, index) => {
+          let baitbox = document.getElementById(`box_${item}`);
+          if (index < 6) {
+            baitbox.style.backgroundColor = `rgba(0,3,90,${0.5 + 0.1 * index})`;
+          } else {
+            baitbox.style.backgroundColor = `rgba(0,3,90,1)`;
+          }
+        })
+        console.log(vm.baitBoxLeft);
+
+        if (!(vm.topBoxArray.some(item => { if (item == pos) { return true } }))) {
+          let temp = pos;
+          do {
+            temp -= 28;
+            vm.baitBoxUp.push(temp);
+          } while (!(vm.topBoxArray.some(item => { if (item == temp) { return true } })))
+        }//如果目前餌不是在最右邊
+        vm.baitBoxUp.forEach((item, index) => {
+          let baitbox = document.getElementById(`box_${item}`);
+          if (index < 6) {
+            baitbox.style.backgroundColor = `rgba(0,3,90,${0.5 + 0.1 * index})`;
+          } else {
+            baitbox.style.backgroundColor = `rgba(0,3,90,1)`;
+          }
+        })
+        console.log(vm.baitBoxUp);
+
+        if (!(vm.bottomBoxArray.some(item => { if (item == pos) { return true } }))) {
+          let temp = pos;
+          do {
+            temp += 28;
+            vm.baitBoxDown.push(temp);
+          } while (!(vm.bottomBoxArray.some(item => { if (item == temp) { return true } })))
+        }//如果目前餌不是在最右邊
+        vm.baitBoxDown.forEach((item, index) => {
+          let baitbox = document.getElementById(`box_${item}`);
+          if (index < 6) {
+            baitbox.style.backgroundColor = `rgba(0,3,90,${0.5 + 0.1 * index})`;
+          } else {
+            baitbox.style.backgroundColor = `rgba(0,3,90,1)`;
+          }
+        })
+        console.log(vm.baitBoxDown);
+      }
       function getRandom(min, max) {
         let number = Math.floor(Math.random() * (max - min + 1)) + min;
         let isEqualSnakeBody = vm.snakeBody.some((item) => { if (item.pos == number) { return true } });
@@ -300,6 +379,6 @@ var app = new Vue({
     vm.drawSnake();//渲染蛇蛇
     vm.randomBait();//隨機產生餌
     vm.watchKeyDown();//監視user操作方向鍵
-    // vm.snakeMoving();//控制蛇蛇前進
+    vm.snakeMoving();//控制蛇蛇前進
   },
 })
