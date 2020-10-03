@@ -92,21 +92,16 @@
       }
 
       .snakeHeader {
-        z-index: 1;
-        background-color: #00ffe2;
+        z-index: 9999;
+        background-color: #00ffe2 !important;
         box-shadow: 0 0 30px 6px #fff;
         border: none;
       }
 
       .snakeBody {
-        z-index: 1;
-        background-color: #fff;
+        z-index: 10;
+        // background-color: #fff;
         border: solid 1px #002a9d;
-      }
-
-      .pointBox {
-        background-image: url('../static/ic-point@2x.png');
-        background: transparent;
       }
     }
   }

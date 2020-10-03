@@ -15,7 +15,7 @@ var app = new Vue({
         type: 'right',
         pos: 1
       },
-      timer: 300,
+      timer: 200,
       rowMaxCount: 28,//一行有28個BOX
       colMaxCount: 16,//一欄有16個BOX
       nowRow: 1,//目前在第幾行
@@ -108,6 +108,7 @@ var app = new Vue({
         vm.snakeBody.forEach(item => {
           let body = document.getElementById(`box_${item.pos}`);
           body.classList.remove('snakeBody');
+          body.style.backgroundColor = '#00035a';//消除蛇蛇身體顏色
           //把現在的方向&位置記錄到舊資料裡
           item.oldType = item.type;
           item.oldPos = item.pos;
@@ -121,9 +122,36 @@ var app = new Vue({
           let header = document.getElementById(`box_${vm.snakeHeader.pos}`);
           header.classList.add('snakeHeader');
           if (vm.snakeBody.length > 0) {
-            vm.snakeBody.forEach(item => {
+            vm.snakeBody.forEach((item, index) => {
               let body = document.getElementById(`box_${item.pos}`);
               body.classList.add('snakeBody');
+
+              function BGCgradient() {
+                let level = null;
+                if (vm.snakeBody.length <= 10) {
+                  level = 100 * Math.pow(index, (1 / 3));
+                } else if (vm.snakeBody.length <= 20 && vm.snakeBody.length > 10) {
+                  level = 90 * Math.pow(index, (1 / 3));
+                } else if (vm.snakeBody.length <= 30 && vm.snakeBody.length > 20) {
+                  level = 80 * Math.pow(index, (1 / 3));
+                } else if (vm.snakeBody.length <= 40 && vm.snakeBody.length > 30) {
+                  level = 70 * Math.pow(index, (1 / 3));
+                } else if (vm.snakeBody.length <= 70 && vm.snakeBody.length > 40) {
+                  level = 60 * Math.pow(index, (1 / 3));
+                } else if (vm.snakeBody.length <= 90 && vm.snakeBody.length > 70) {
+                  level = 55 * Math.pow(index, (1 / 3));
+                } else if (vm.snakeBody.length <= 120 && vm.snakeBody.length > 90) {
+                  level = 50 * Math.pow(index, (1 / 3));
+                } else if (vm.snakeBody.length > 120) {
+                  level = 30 * Math.pow(index, (1 / 3));
+                }
+                return 255 - level;
+              }//蛇蛇小頭產生漸層
+
+              let bgc = BGCgradient();
+              // let BGCopacity = index / vm.snakeBody.length;
+              body.style.backgroundColor = `rgba(${bgc},${bgc},${bgc},1)`;
+              console.log(body.style.backgroundColor, bgc);
             });
           }
           return true;
@@ -234,18 +262,21 @@ var app = new Vue({
         vm.canUsekeyBoard = false;
       }
     },
-    randomBait() {
+    async randomBait() {
       const vm = this;
-      vm.baitPos = getRandom(1, 448);
+      await getRandom(1, 448);
+      console.log(vm.baitPos - 1);
       vm.boxItem[vm.baitPos - 1].isPoint = true;//1~448 -1 => 0~447
 
       function getRandom(min, max) {
         let number = Math.floor(Math.random() * (max - min + 1)) + min;
         let isEqualSnakeBody = vm.snakeBody.some((item) => { if (item.pos == number) { return true } });
         if (number == vm.snakeHeader.pos || isEqualSnakeBody) {
+          console.log('again :', number);
           getRandom(1, 448);//如果餌的座標等於蛇的身體或是頭 就再產生一次
         } else {
-          return number;//回傳random數字
+          console.log('return :', number);
+          vm.baitPos = number;
         }
       };
     },
@@ -269,6 +300,6 @@ var app = new Vue({
     vm.drawSnake();//渲染蛇蛇
     vm.randomBait();//隨機產生餌
     vm.watchKeyDown();//監視user操作方向鍵
-    vm.snakeMoving();//控制蛇蛇前進
+    // vm.snakeMoving();//控制蛇蛇前進
   },
 })
