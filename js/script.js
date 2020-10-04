@@ -3,7 +3,7 @@ var app = new Vue({
   data() {
     return {
       canUsekeyBoard: false,//控制鍵盤移動是否有效
-      isStart: true,//預設false
+      isStart: false,//預設false
       boxItem: [],
       snakeBody: [
       ],//蛇蛇身體
@@ -15,7 +15,9 @@ var app = new Vue({
         type: 'right',
         pos: 1
       },
-      timer: 200,
+      timeObj: null,
+      timer: 250,
+      score: 0,
       rowMaxCount: 28,//一行有28個BOX
       colMaxCount: 16,//一欄有16個BOX
       nowRow: 1,//目前在第幾行
@@ -55,13 +57,47 @@ var app = new Vue({
   methods: {
     snakeMoving() {
       const vm = this;
-      setInterval(() => {
+      let addtime = 0;
+      vm.timeObj = setInterval(fn, vm.timer);//固定時間執行
+
+      function fn() {
         vm.canUsekeyBoard = true;//允許移動
         vm.removeOldSnakeHeader();//移除舊的蛇蛇小頭
         vm.determineOverflow();//判斷蛇蛇下一步是否會超出界 && 改變蛇蛇小頭的資訊(方向、POS)
+        vm.gameover();//判斷遊戲結束
         vm.snakeEatBait();//判斷蛇蛇是否吃到餌
         vm.drawSnake();//渲染新的蛇蛇
-      }, vm.timer);//固定時間執行
+
+        speedChange();//改變速度 score 越高 speed 越高
+        function speedChange() {
+          if (vm.score == 5 && addtime == 0) {
+            clearInterval(vm.timeObj);
+            vm.timeObj = setInterval(fn, vm.timer = 200);
+            addtime++;
+          }
+          if (vm.score == 15 && addtime == 1) {
+            clearInterval(vm.timeObj);
+            vm.timeObj = setInterval(fn, vm.timer = 100);
+            addtime++;
+          }
+          if (vm.score == 30 && addtime == 2) {
+            clearInterval(vm.timeObj);
+            vm.timeObj = setInterval(fn, vm.timer = 50);
+            addtime++;
+          }
+        }
+      }
+
+    },
+    gameover() {
+      const vm = this;
+      vm.snakeBody.some((item) => {
+        if (vm.snakeHeader.pos == item.pos) {
+          console.log('gameover');
+          clearInterval(vm.timeObj);
+          return true;
+        }
+      })
     },
     determineOverflow() {
       const vm = this;
@@ -245,6 +281,12 @@ var app = new Vue({
     start() {
       const vm = this;
       vm.isStart = true;
+      setTimeout(function () {
+        vm.drawSnake();//渲染蛇蛇
+        vm.randomBait();//隨機產生餌
+        vm.watchKeyDown();//監視user操作方向鍵
+        vm.snakeMoving();//控制蛇蛇前進
+      }, 100);
     },
     watchKeyDown() {
       const vm = this;
@@ -268,10 +310,10 @@ var app = new Vue({
     },
     async randomBait() {
       const vm = this;
-      await getRandom(1, 448);
+      await getRandom(1, 448);//隨機產生餌
       console.log(vm.baitPos - 1);
       vm.boxItem[vm.baitPos - 1].isPoint = true;//1~448 -1 => 0~447
-      baitGradient(vm.baitPos);
+      baitGradient(vm.baitPos);//產生餌的陰影
       function baitGradient(pos) {
         vm.baitBoxRight = [];
         vm.baitBoxLeft = [];
@@ -302,7 +344,7 @@ var app = new Vue({
             temp--;
             vm.baitBoxLeft.push(temp);
           } while (!(vm.leftBoxArray.some(item => { if (item == temp) { return true } })))
-        }//如果目前餌不是在最右邊
+        }//如果目前餌不是在最左邊
         vm.baitBoxLeft.forEach((item, index) => {
           let baitbox = document.getElementById(`box_${item}`);
           if (index < 6) {
@@ -319,7 +361,7 @@ var app = new Vue({
             temp -= 28;
             vm.baitBoxUp.push(temp);
           } while (!(vm.topBoxArray.some(item => { if (item == temp) { return true } })))
-        }//如果目前餌不是在最右邊
+        }//如果目前餌不是在最上面
         vm.baitBoxUp.forEach((item, index) => {
           let baitbox = document.getElementById(`box_${item}`);
           if (index < 6) {
@@ -336,7 +378,7 @@ var app = new Vue({
             temp += 28;
             vm.baitBoxDown.push(temp);
           } while (!(vm.bottomBoxArray.some(item => { if (item == temp) { return true } })))
-        }//如果目前餌不是在最右邊
+        }//如果目前餌不是在最下面
         vm.baitBoxDown.forEach((item, index) => {
           let baitbox = document.getElementById(`box_${item}`);
           if (index < 6) {
@@ -350,7 +392,7 @@ var app = new Vue({
       function getRandom(min, max) {
         let number = Math.floor(Math.random() * (max - min + 1)) + min;
         let isEqualSnakeBody = vm.snakeBody.some((item) => { if (item.pos == number) { return true } });
-        if (number == vm.snakeHeader.pos || isEqualSnakeBody) {
+        if (number == vm.snakeHeader.pos || isEqualSnakeBody) {//餌的座標是否和蛇重疊
           console.log('again :', number);
           getRandom(1, 448);//如果餌的座標等於蛇的身體或是頭 就再產生一次
         } else {
@@ -362,23 +404,44 @@ var app = new Vue({
     removeOldBait() {
       const vm = this;
       vm.boxItem[vm.baitPos - 1].isPoint = false;
+      vm.baitBoxRight.forEach((item, index) => {
+        let baitbox = document.getElementById(`box_${item}`);
+        baitbox.style.backgroundColor = '#00035a';
+      })
+      vm.baitBoxLeft.forEach((item, index) => {
+        let baitbox = document.getElementById(`box_${item}`);
+        baitbox.style.backgroundColor = '#00035a';
+      })
+      vm.baitBoxUp.forEach((item, index) => {
+        let baitbox = document.getElementById(`box_${item}`);
+        baitbox.style.backgroundColor = '#00035a';
+      })
+      vm.baitBoxDown.forEach((item, index) => {
+        let baitbox = document.getElementById(`box_${item}`);
+        baitbox.style.backgroundColor = '#00035a';
+      })
     },
     snakeEatBait() {
       const vm = this;
       if (vm.snakeHeader.pos == vm.baitPos) {
-        console.log('得分!');
-        vm.addSnakeBody();
+        vm.score += 1;
+        vm.addSnakeBody();//增加一個蛇蛇身體的BOX
         vm.removeOldBait();//移除舊的餌座標
         vm.randomBait();//重新產生餌
       }//如果蛇蛇小頭座標等於餌的座標
     },
+    watchStart() {
+      const vm = this;
+      document.onkeydown = function (ev) {
+        if (ev.keyCode == 32 && vm.isStart == false) {
+          vm.start();
+        }
+      }
+    }
   },
-  async mounted() {
+  mounted() {
     const vm = this;
-    await vm.createBox();//要等createBox執行完才能渲染小頭，否則會找不到DOM
-    vm.drawSnake();//渲染蛇蛇
-    vm.randomBait();//隨機產生餌
-    vm.watchKeyDown();//監視user操作方向鍵
-    vm.snakeMoving();//控制蛇蛇前進
+    vm.createBox();//要等createBox執行完才能渲染蛇蛇，否則會找不到DOM
+    vm.watchStart();//監聽空白鍵開始
   },
 })

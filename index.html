@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SNAAAAAAKE</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link media="screen" href="http://openfontlibrary.org/face/segoe-ui-symbol" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="./css/reset.css">
   <link rel="stylesheet" href="./css/style.css">
 </head>
@@ -19,9 +20,24 @@
         <p>SNAAAAAAKE</p>
         <div class="square right"></div>
       </div>
-      <p class="space" @click='start'>PRESS [SPACE] TO START</p>
+      <p class="space">PRESS [SPACE] TO START</p>
     </div>
-    <div class="gameBox" v-if='isStart'>
+    <div class="gameBox" v-else>
+      <div class="speed">
+        <label for="">speed</label>
+        <span v-if='timer == 250' style="font-family: SegoeUISymbolRegular">&#x1F422;</span>
+        <span v-if='timer == 200' style="font-family: SegoeUISymbolRegular">&#x1F407;</span>
+        <span v-if='timer == 100' style="font-family: SegoeUISymbolRegular">&#x1F697;</span>
+        <span v-if='timer == 50' style="font-size: 40px;font-family: SegoeUISymbolRegular">&#x1F680;</span>
+      </div>
+      <div class="score">
+        <label for="">score</label>
+        <p v-text='score'></p>
+      </div>
+      <div class="bestScore">
+        <label for="">bes+</label>
+        <p>108</p>
+      </div>
       <div class="gamescreen">
         <div v-for='(item,index) in boxItem' :id=`box_${item.id}` class="box">
           <img v-show='item.isPoint' src="./static/ic-point@2x.png"
