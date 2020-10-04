@@ -36,7 +36,7 @@
       </div>
       <div class="bestScore">
         <label for="">bes+</label>
-        <p>108</p>
+        <p v-text='bestScore'></p>
       </div>
       <div class="gamescreen">
         <div v-for='(item,index) in boxItem' :id=`box_${item.id}` class="box">

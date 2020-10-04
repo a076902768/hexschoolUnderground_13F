@@ -2,6 +2,8 @@ var app = new Vue({
   el: '#app',
   data() {
     return {
+      bestScore: 0,//歷史最高分
+      audio: '',
       canUsekeyBoard: false,//控制鍵盤移動是否有效
       isStart: false,//預設false
       boxItem: [],
@@ -17,7 +19,7 @@ var app = new Vue({
       },
       timeObj: null,
       timer: 250,
-      score: 0,
+      score: 0,//目前獲得分數
       rowMaxCount: 28,//一行有28個BOX
       colMaxCount: 16,//一欄有16個BOX
       nowRow: 1,//目前在第幾行
@@ -97,33 +99,37 @@ var app = new Vue({
           clearInterval(vm.timeObj);
           return true;
         }
-      })
+      });
+      if (vm.score > vm.bestScore) {
+        console.log('恭喜刷新歷史新高!');
+        localStorage.setItem('snakeScore', vm.score);
+      }
     },
     determineOverflow() {
       const vm = this;
       vm.snakeHeader.type = vm.addType.type;//改變蛇蛇小頭前進的方向
       vm.snakeHeader.pos += vm.addType.push;//改變蛇蛇小頭所在的BOX位置
 
-      console.log(vm.snakeHeader.pos);
+      // console.log(vm.snakeHeader.pos);
       //先判斷目前前進的方向
       let isLeft = vm.leftBoxArray.some((item) => { if (item == vm.oldSnakeHeader.pos) { return true; } });
       let isRight = vm.rightBoxArray.some((item) => { if (item == vm.oldSnakeHeader.pos) { return true; } });
       let isTop = vm.topBoxArray.some((item) => { if (item == vm.oldSnakeHeader.pos) { return true; } });
       let isBottom = vm.bottomBoxArray.some((item) => { if (item == vm.oldSnakeHeader.pos) { return true; } });
       if (isLeft && vm.snakeHeader.type == 'left') {
-        console.log('目前前進方向為左邊且上一個BOX為同行最左側');
+        // console.log('目前前進方向為左邊且上一個BOX為同行最左側');
         vm.snakeHeader.pos += vm.addDown.push;//往下一格
       }
       if (isRight && vm.snakeHeader.type == 'right') {
-        console.log('目前前進方向為右邊且上一個BOX為同行最右側');
+        // console.log('目前前進方向為右邊且上一個BOX為同行最右側');
         vm.snakeHeader.pos += vm.addUp.push;//往下一格
       }
       if (isTop && vm.snakeHeader.type == 'up') {
-        console.log('目前前進方向為往上且上一個BOX為同欄最頂端');
+        // console.log('目前前進方向為往上且上一個BOX為同欄最頂端');
         vm.snakeHeader.pos += 28 + 420;
       }
       if (isBottom && vm.snakeHeader.type == 'down') {
-        console.log('目前前進方向為往下且上一個BOX為同欄最底端');
+        // console.log('目前前進方向為往下且上一個BOX為同欄最底端');
         vm.snakeHeader.pos += -28 - 420;
       }
       if (vm.snakeBody[0]) {
@@ -200,38 +206,86 @@ var app = new Vue({
     },
     addSnakeBody() {
       const vm = this;
+      // console.log(vm.snakeBody.length, vm.snakeHeader.pos)
       if (vm.snakeBody.length == 0) {
         if (vm.snakeHeader.type == 'right') {
-          vm.snakeBody.push({
-            type: 'right',
-            pos: vm.snakeHeader.pos - 1,
-            oldType: null,
-            oldPos: null
-          });
+          let isLeft = vm.leftBoxArray.some((item) => { if (item == vm.snakeHeader.pos) { return true } });
+          // console.log(isLeft);
+          if (isLeft) {
+            vm.snakeBody.push({
+              type: 'right',
+              pos: vm.snakeHeader.pos + 28 - 1,
+              oldType: null,
+              oldPos: null
+            });
+          } else {
+            vm.snakeBody.push({
+              type: 'right',
+              pos: vm.snakeHeader.pos - 1,
+              oldType: null,
+              oldPos: null
+            });
+          }
         }
         if (vm.snakeHeader.type == 'left') {
-          vm.snakeBody.push({
-            type: 'left',
-            pos: vm.snakeHeader.pos + 1,
-            oldType: null,
-            oldPos: null
-          });
+          let isRight = vm.rightBoxArray.some((item) => { if (item == vm.snakeHeader.pos) { return true } });
+          // console.log(isRight);
+          if (isRight) {
+            vm.snakeBody.push({
+              type: 'left',
+              pos: vm.snakeHeader.pos - 28 + 1,
+              oldType: null,
+              oldPos: null
+            });
+          } else {
+            vm.snakeBody.push({
+              type: 'left',
+              pos: vm.snakeHeader.pos + 1,
+              oldType: null,
+              oldPos: null
+            });
+          }
         }
         if (vm.snakeHeader.type == 'up') {
-          vm.snakeBody.push({
-            type: 'up',
-            pos: vm.snakeHeader.pos + 28,
-            oldType: null,
-            oldPos: null
-          });
+          // console.log('up');
+          let isBottom = vm.bottomBoxArray.some((item) => { if (item == vm.snakeHeader.pos) { return true } });
+          // console.log(isBottom);
+          if (isBottom) {
+
+            vm.snakeBody.push({
+              type: 'up',
+              pos: vm.snakeHeader.pos - 420,
+              oldType: null,
+              oldPos: null
+            });
+          } else {
+            vm.snakeBody.push({
+              type: 'up',
+              pos: vm.snakeHeader.pos + 28,
+              oldType: null,
+              oldPos: null
+            });
+          }
         }
         if (vm.snakeHeader.type == 'down') {
-          vm.snakeBody.push({
-            type: 'down',
-            pos: vm.snakeHeader.pos - 28,
-            oldType: null,
-            oldPos: null
-          });
+          // console.log('down');
+          let isTop = vm.topBoxArray.some((item) => { if (item == vm.snakeHeader.pos) { return true } });
+          // console.log(isTop);
+          if (isTop) {
+            vm.snakeBody.push({
+              type: 'down',
+              pos: vm.snakeHeader.pos + 420,
+              oldType: null,
+              oldPos: null
+            });
+          } else {
+            vm.snakeBody.push({
+              type: 'down',
+              pos: vm.snakeHeader.pos - 28,
+              oldType: null,
+              oldPos: null
+            });
+          }
         }
       } else {
         switch (vm.snakeBody[vm.snakeBody.length - 1].type) {
@@ -425,6 +479,8 @@ var app = new Vue({
       const vm = this;
       if (vm.snakeHeader.pos == vm.baitPos) {
         vm.score += 1;
+        let audio = new Audio('../static/getPoint.mp3');
+        audio.play();
         vm.addSnakeBody();//增加一個蛇蛇身體的BOX
         vm.removeOldBait();//移除舊的餌座標
         vm.randomBait();//重新產生餌
@@ -437,10 +493,25 @@ var app = new Vue({
           vm.start();
         }
       }
+    },
+    backgroundMusic() {
+      const vm = this;
+      vm.audio = new Audio('../static/snake.mp3');
+      vm.audio.volume = 0.2;
+      vm.audio.loop = true;
+      vm.audio.play();
+    },
+    getLocalStorgeScore() {
+      const vm = this;
+      if (localStorage.getItem('snakeScore')) {
+        vm.bestScore = Number(localStorage.getItem('snakeScore'));
+      }
     }
   },
   mounted() {
     const vm = this;
+    vm.getLocalStorgeScore();//取得localstorage分數
+    vm.backgroundMusic();//播放背景音樂
     vm.createBox();//要等createBox執行完才能渲染蛇蛇，否則會找不到DOM
     vm.watchStart();//監聽空白鍵開始
   },
