@@ -5,7 +5,8 @@ var app = new Vue({
       bestScore: 0,//歷史最高分
       audio: '',
       canUsekeyBoard: false,//控制鍵盤移動是否有效
-      isStart: false,//預設false
+      isPlay: false,//預設false
+      isOver: false,//預設false
       boxItem: [],
       snakeBody: [
       ],//蛇蛇身體
@@ -22,8 +23,6 @@ var app = new Vue({
       score: 0,//目前獲得分數
       rowMaxCount: 28,//一行有28個BOX
       colMaxCount: 16,//一欄有16個BOX
-      nowRow: 1,//目前在第幾行
-      nowCol: 1,//目前在第幾欄
       baitPos: null,//餌的位置
       oldAddType: 'right',//
       addType: {
@@ -77,7 +76,7 @@ var app = new Vue({
             vm.timeObj = setInterval(fn, vm.timer = 200);
             addtime++;
           }
-          if (vm.score == 15 && addtime == 1) {
+          if (vm.score == 10 && addtime == 1) {
             clearInterval(vm.timeObj);
             vm.timeObj = setInterval(fn, vm.timer = 100);
             addtime++;
@@ -95,14 +94,45 @@ var app = new Vue({
       const vm = this;
       vm.snakeBody.some((item) => {
         if (vm.snakeHeader.pos == item.pos) {
-          console.log('gameover');
           clearInterval(vm.timeObj);
+          if (vm.score > vm.bestScore) {
+            console.log('恭喜刷新歷史新高!');
+            localStorage.setItem('snakeScore', vm.score);
+            vm.bestScore = Number(localStorage.getItem('snakeScore'));
+          }
+          reset();//設定初始化
+          vm.isPlay = false;
+          vm.isOver = true;
           return true;
         }
       });
-      if (vm.score > vm.bestScore) {
-        console.log('恭喜刷新歷史新高!');
-        localStorage.setItem('snakeScore', vm.score);
+
+
+      function reset() {
+        vm.snakeBody = [];
+        vm.snakeHeader = {
+          type: 'right',
+          pos: 1
+        };
+        vm.oldSnakeHeader = {
+          type: 'right',
+          pos: 1
+        };
+        vm.canUsekeyBoard = false;
+        vm.timeObj = null;
+        vm.timer = 250;
+        vm.baitPos = null;
+        vm.oldAddType = 'right',
+          vm.addType = {
+            type: 'right',//方向
+            push: 1//前進單位
+          };
+        vm.baitBoxRight = [];
+        vm.baitBoxLeft = [];
+        vm.baitBoxUp = [];
+        vm.baitBoxDown = [];
+        vm.boxItem = [];
+        vm.createBox();
       }
     },
     determineOverflow() {
@@ -334,7 +364,7 @@ var app = new Vue({
     },
     start() {
       const vm = this;
-      vm.isStart = true;
+      vm.isPlay = true;
       setTimeout(function () {
         vm.drawSnake();//渲染蛇蛇
         vm.randomBait();//隨機產生餌
@@ -345,6 +375,27 @@ var app = new Vue({
     watchKeyDown() {
       const vm = this;
       document.onkeydown = function (ev) {
+        if (!vm.isPlay && vm.isOver) {
+          if (ev.keyCode == 89) {
+            vm.isPlay = true;
+            vm.isOver = false;
+            vm.score = 0;
+            setTimeout(function () {
+              vm.drawSnake();//渲染蛇蛇
+              vm.randomBait();//隨機產生餌
+              vm.watchKeyDown();//監視user操作方向鍵
+              vm.snakeMoving();//控制蛇蛇前進
+            }, 100);
+          }
+          if (ev.keyCode == 78) {
+            vm.isPlay = false;
+            vm.isOver = false;
+            vm.score = 0;
+            vm.watchStart();
+          }
+        }
+
+
         if (vm.canUsekeyBoard) {
           if (ev.keyCode == 38 && vm.addType.type != 'down') {
             vm.addType = vm.addUp;
@@ -489,7 +540,7 @@ var app = new Vue({
     watchStart() {
       const vm = this;
       document.onkeydown = function (ev) {
-        if (ev.keyCode == 32 && vm.isStart == false) {
+        if (ev.keyCode == 32 && vm.isPlay == false) {
           vm.start();
         }
       }
@@ -499,6 +550,7 @@ var app = new Vue({
       vm.audio = new Audio('../static/snake.mp3');
       vm.audio.volume = 0.2;
       vm.audio.loop = true;
+      vm.audio.muted
       vm.audio.play();
     },
     getLocalStorgeScore() {
@@ -511,7 +563,9 @@ var app = new Vue({
   mounted() {
     const vm = this;
     vm.getLocalStorgeScore();//取得localstorage分數
-    vm.backgroundMusic();//播放背景音樂
+    setTimeout(() => {
+      vm.backgroundMusic();//播放背景音樂
+    }, 1000);
     vm.createBox();//要等createBox執行完才能渲染蛇蛇，否則會找不到DOM
     vm.watchStart();//監聽空白鍵開始
   },

@@ -9,13 +9,7 @@
           transform: translate(-50%, -50%);
 }
 
-#app .startScreen {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-#app .startScreen .title {
+#app .title {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -30,7 +24,7 @@
           transform: translate(-50%, -50%);
 }
 
-#app .startScreen .title .square {
+#app .title .square {
   height: 37px;
   width: 37px;
   position: absolute;
@@ -38,12 +32,18 @@
   background-color: #fff;
 }
 
-#app .startScreen .title .left {
+#app .title .left {
   left: -48px;
 }
 
-#app .startScreen .title .right {
+#app .title .right {
   right: -49px;
+}
+
+#app .startScreen {
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
 #app .startScreen .space {
@@ -176,5 +176,83 @@
 #app .gameBox .gamescreen .snakeBody {
   z-index: 10;
   border: solid 1px #002a9d;
+}
+
+#app .gameOver {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  background-color: #000000;
+  color: white;
+}
+
+#app .gameOver .title {
+  top: 38%;
+}
+
+#app .gameOver .scoreRow {
+  width: 420px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 51%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+#app .gameOver .scoreRow .selfScore,
+#app .gameOver .scoreRow .bestScore {
+  height: 75px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  text-align: center;
+}
+
+#app .gameOver .restart {
+  text-align: center;
+  font-size: 24px;
+  width: 200px;
+  height: 40px;
+  line-height: 40px;
+  color: black;
+  background-color: #fff;
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+#app .gameOver .options {
+  color: #00FFE2;
+  font-size: 24px;
+  position: absolute;
+  top: 75%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+#app .gameOver .yes {
+  left: 41%;
+}
+
+#app .gameOver .no {
+  right: 32%;
 }
 /*# sourceMappingURL=style.css.map */

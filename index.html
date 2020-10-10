@@ -13,7 +13,7 @@
 
 <body>
   <div id="app">
-    <div class="startScreen" v-if='!isStart'>
+    <div class="startScreen" v-if='!isPlay && !isOver'>
       <img src="./static/bg-start@2x.png" alt="">
       <div class="title">
         <div class="square left"></div>
@@ -22,7 +22,7 @@
       </div>
       <p class="space">PRESS [SPACE] TO START</p>
     </div>
-    <div class="gameBox" v-else>
+    <div class="gameBox" v-if='isPlay && !isOver'>
       <div class="speed">
         <label for="">speed</label>
         <span v-if='timer == 250' style="font-family: SegoeUISymbolRegular">&#x1F422;</span>
@@ -35,7 +35,7 @@
         <p v-text='score'></p>
       </div>
       <div class="bestScore">
-        <label for="">bes+</label>
+        <label for="">best</label>
         <p v-text='bestScore'></p>
       </div>
       <div class="gamescreen">
@@ -44,6 +44,27 @@
             style="width: 100%;height: 100%;transform: scale(2.0);" alt="">
         </div>
       </div>
+    </div>
+    <div class="gameOver" v-if='!isPlay && isOver'>
+      <div class="title">
+        <div class="square left"></div>
+        <p>GAME OVER</p>
+        <div class="square right"></div>
+      </div>
+      <div class="scoreRow">
+        <div class="selfScore">
+          <p style="font-size: 16px;">score</p>
+          <p v-text='score' style="font-size: 36px;"></p>
+        </div>
+        <p style="font-size: 36px;">/</p>
+        <div class="bestScore">
+          <p style="font-size: 16px;">best</p>
+          <p v-text='bestScore' style="font-size: 36px;"></p>
+        </div>
+      </div>
+      <div class="restart">RESTART?</div>
+      <div class="options yes">YES[Y]</div>
+      <div class="options no">NO[N]</div>
     </div>
   </div>
   <script src="./js/vue.js"></script>

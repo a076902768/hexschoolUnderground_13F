@@ -7,37 +7,37 @@
   left: 50%;
   transform: translate(-50%, -50%);
 
+  .title {
+    display: flex;
+    box-sizing: border-box;
+    font-size: 38px;
+    color: #fff;
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    .square {
+      height: 37px;
+      width: 37px;
+      position: absolute;
+      top: -2px;
+      background-color: #fff;
+    }
+
+    .left {
+      left: -48px;
+    }
+
+    .right {
+      right: -49px;
+    }
+  }
+
   .startScreen {
     width: 100%;
     height: 100%;
     position: relative;
-
-    .title {
-      display: flex;
-      box-sizing: border-box;
-      font-size: 38px;
-      color: #fff;
-      position: absolute;
-      top: 48%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-
-      .square {
-        height: 37px;
-        width: 37px;
-        position: absolute;
-        top: -2px;
-        background-color: #fff;
-      }
-
-      .left {
-        left: -48px;
-      }
-
-      .right {
-        right: -49px;
-      }
-    }
 
     .space {
       cursor: pointer;
@@ -151,6 +151,68 @@
         // background-color: #fff;
         border: solid 1px #002a9d;
       }
+    }
+  }
+
+  .gameOver {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #000000;
+    color: white;
+
+    .title {
+      top: 38%;
+    }
+
+    .scoreRow {
+      width: 420px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: absolute;
+      top: 50%;
+      left: 51%;
+      transform: translate(-50%, -50%);
+
+      .selfScore,
+      .bestScore {
+        height: 75px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-align: center;
+      }
+    }
+
+    .restart {
+      text-align: center;
+      font-size: 24px;
+      width: 200px;
+      height: 40px;
+      line-height: 40px;
+      color: black;
+      background-color: #fff;
+      position: absolute;
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .options {
+      color: #00FFE2;
+      font-size: 24px;
+      position: absolute;
+      top: 75%;
+      transform: translate(-50%, -50%);
+    }
+
+    .yes {
+      left: 41%;
+    }
+
+    .no {
+      right: 32%;
     }
   }
 }
